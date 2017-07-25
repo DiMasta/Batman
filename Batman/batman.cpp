@@ -145,34 +145,22 @@ void Game::turnBegin() {
 
 	if (bombDirection.find('U') != string::npos) {
 		yCoord -= (yCoord - minY) / 2;
-
-		if (tempY > minY) {
-			minY = tempY;
-		}
+		maxY = tempY;
 	}
 
 	if (bombDirection.find('D') != string::npos) {
 		yCoord += (maxY - yCoord) / 2;
-
-		if (yCoord < maxY) {
-			maxY = yCoord;
-		}
+		minY = tempY;
 	}
 
 	if (bombDirection.find('L') != string::npos) {
 		xCoord -= (xCoord - minX) / 2;
-
-		if (tempX > minX) {
-			minX = tempX;
-		}
+		maxX = tempX;
 	}
 
 	if (bombDirection.find('R') != string::npos) {
 		xCoord += (maxX - xCoord) / 2;
-
-		if (xCoord < maxX) {
-			maxX = xCoord;
-		}
+		minX = tempX;
 	}
 }
 
