@@ -13,8 +13,10 @@
 
 using namespace std;
 
-const int DISPLAY_INPUT = 0;
+const int DISPLAY_INPUT = 1;
 const int USE_HARDCODED_INPUT = 0;
+
+const int INVALID_COORD = -1;
 
 enum Direction {
 	U = 0,
@@ -49,6 +51,10 @@ private:
 	int jumpsLeft;
 	int xCoord;
 	int yCoord;
+	int minX;
+	int maxX;
+	int minY;
+	int maxY;
 	string bombDirection;
 
 	int turnsCount;
@@ -89,14 +95,19 @@ void Game::gameLoop() {
 
 void Game::getGameInput() {
 	if (USE_HARDCODED_INPUT) {
-		width = 4;
-		height = 8;
-		jumpsLeft = 40;
-		xCoord = 2;
-		yCoord = 3;
+		width = 1;
+		height = 80;
+		jumpsLeft = 6;
+		xCoord = 0;
+		yCoord = 20;
 	}
 	else {
 		cin >> width >> height >> jumpsLeft >> xCoord >> yCoord;
+
+		minX = 0;
+		maxX = width;
+		minY = 0;
+		maxY = height;
 	}
 
 	if (DISPLAY_INPUT) {
@@ -111,13 +122,16 @@ void Game::getGameInput() {
 
 void Game::getTurnInput() {
 	if (USE_HARDCODED_INPUT) {
-		bombDirection = "DR";
+		bombDirection = "D";
 	}
 	else {
 		cin >> bombDirection;
 	}
 
 	if (DISPLAY_INPUT) {
+		cerr << "Min X: " << minX << " Max X: " << maxX << endl;
+		cerr << "Min Y: " << minY << " Max Y: " << maxY << endl;
+		cerr << xCoord << " " << yCoord << endl;
 		cerr << bombDirection << endl;
 	}
 }
@@ -126,20 +140,39 @@ void Game::getTurnInput() {
 //*************************************************************************************************************
 
 void Game::turnBegin() {
+	int tempX = xCoord;
+	int tempY = yCoord;
+
 	if (bombDirection.find('U') != string::npos) {
-		yCoord /= 2;
+		yCoord -= (yCoord - minY) / 2;
+
+		if (tempY > minY) {
+			minY = tempY;
+		}
 	}
 
 	if (bombDirection.find('D') != string::npos) {
-		yCoord += (height - yCoord) / 2;
+		yCoord += (maxY - yCoord) / 2;
+
+		if (yCoord < maxY) {
+			maxY = yCoord;
+		}
 	}
 
 	if (bombDirection.find('L') != string::npos) {
-		xCoord /= 2;
+		xCoord -= (xCoord - minX) / 2;
+
+		if (tempX > minX) {
+			minX = tempX;
+		}
 	}
 
 	if (bombDirection.find('R') != string::npos) {
-		xCoord += (width - xCoord) / 2;
+		xCoord += (maxX - xCoord) / 2;
+
+		if (xCoord < maxX) {
+			maxX = xCoord;
+		}
 	}
 }
 
