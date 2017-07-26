@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const int DISPLAY_INPUT = 1;
+const int DISPLAY_INPUT = 0;
 const int USE_HARDCODED_INPUT = 0;
 
 const int INVALID_COORD = -1;
@@ -95,11 +95,16 @@ void Game::gameLoop() {
 
 void Game::getGameInput() {
 	if (USE_HARDCODED_INPUT) {
-		width = 1;
-		height = 80;
-		jumpsLeft = 6;
-		xCoord = 0;
-		yCoord = 20;
+		width = 100;
+		height = 100;
+		jumpsLeft = 7;
+		xCoord = 1;
+		yCoord = 2;
+
+		minX = 0;
+		maxX = 1;
+		minY = 0;
+		maxY = 4;
 	}
 	else {
 		cin >> width >> height >> jumpsLeft >> xCoord >> yCoord;
@@ -122,7 +127,7 @@ void Game::getGameInput() {
 
 void Game::getTurnInput() {
 	if (USE_HARDCODED_INPUT) {
-		bombDirection = "D";
+		bombDirection = "UL";
 	}
 	else {
 		cin >> bombDirection;
@@ -144,7 +149,12 @@ void Game::turnBegin() {
 	int tempY = yCoord;
 
 	if (bombDirection.find('U') != string::npos) {
-		yCoord -= (yCoord - minY) / 2;
+		if (1 == yCoord) {
+			yCoord = 0;
+		}
+		else {
+			yCoord -= (yCoord - (minY - 1)) / 2;
+		}
 		maxY = tempY;
 	}
 
@@ -154,7 +164,12 @@ void Game::turnBegin() {
 	}
 
 	if (bombDirection.find('L') != string::npos) {
-		xCoord -= (xCoord - minX) / 2;
+		if (1 == xCoord) {
+			xCoord = 0;
+		}
+		else {
+			xCoord -= (xCoord - (minX - 1)) / 2;
+		}
 		maxX = tempX;
 	}
 
